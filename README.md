@@ -81,8 +81,7 @@ type ErlangResult
 @external(erlang, "observer", "start")
 fn observer_start() -> ErlangResult
 ```
-This will bring up the observer GUI.
-
+This will bring up the observer GUI. ![](doc/observer4.png)
 You can also use the `sys` functions from the Erlang shell.
 ```
 $ gleam shell
