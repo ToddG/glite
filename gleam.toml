@@ -13,9 +13,10 @@ repository = { type = "github", user = "karlsson", repo = "glite" }
 # https://gleam.run/writing-gleam/gleam-toml/.
 
 [dependencies]
-gleam_stdlib = ">= 0.44.0 and < 2.0.0"
-gleam_erlang = ">= 1.0.0-rc1 and < 2.0.0"
-gleam_otp = ">= 1.0.0-rc2 and < 2.0.0"
+gleam_stdlib = ">= 0.60.0 and < 2.0.0"
+gleam_erlang = ">= 1.0.0 and < 2.0.0"
+gleam_otp = ">= 1.0.0 and < 2.0.0"
+glydamic = { git = "https://github.com/karlsson/glydamic", ref="main"}
 
 [dev-dependencies]
 gleeunit = ">= 1.0.0 and < 2.0.0"

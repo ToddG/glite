@@ -1,12 +1,12 @@
 //// Supervisor starts one service, three client processes and also a
 //// one_for_one supervisor.
-//// 
+////
 //// Clients send two requests each to service with subjects for receiving
 //// request from "handlers"
-//// 
+////
 //// The service process requests the "one_to_one" supervisor to start
 //// handler processes and passes on the service handler req subject.
-//// 
+////
 //// The handlers sends req to clients and includes a response subject.
 //// Client responds with (authentication) string which is wrong.
 //// Counter is increased and handler reqest new authentication string.

@@ -2,9 +2,9 @@ import gleam/erlang/process
 import gleam/io
 import gleam/otp/actor
 import gleam/string
-import glite/child
 import glite/handler
 import glite/msg.{type SReqS}
+import glydamic/child
 
 type State {
   State(sup_name: process.Name(String), my_subject: SReqS(String), no_reqs: Int)

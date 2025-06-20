@@ -3,8 +3,8 @@ import gleam/erlang/process.{type Name, type Pid}
 import gleam/io
 import gleam/otp/actor
 import gleam/otp/supervision
-import glite/child.{type Child, type StartError}
 import glite/msg.{type CReqS, type CRespS}
+import glydamic/child.{type Child, type StartError}
 
 //import gleam/string
 

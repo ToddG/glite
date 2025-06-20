@@ -1,8 +1,8 @@
 import gleam/erlang/process
 import gleam/io
 import gleam/otp/actor
-import glite/child
 import glite/msg
+import glydamic/child
 
 //import gleam/string
 
