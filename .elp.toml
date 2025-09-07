@@ -1,0 +1,3 @@
+[build_info]
+apps = [{name = "glite", dir = "build/dev/erlang/glite", src_dirs = ["_gleam_artefacts"]}]
+deps = "build/packages/*"
