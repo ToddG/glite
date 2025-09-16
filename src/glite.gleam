@@ -76,7 +76,7 @@ fn start_supervisor() {
     })
 
   let one_for_one_sup =
-    supervision.worker(fn() {
+    supervision.supervisor(fn() {
       let assert Ok(actor.Started(pid, _)) = sup.new(sup.OneForOne) |> sup.start
       case process.register(pid, sub_sup_name) {
         Ok(Nil) -> gleam.Ok(actor.Started(pid, Nil))
