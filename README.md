@@ -8,7 +8,7 @@ So how does one turn a Gleam project into an Erlang application? Well many thing
 
 An Erlang application may come in two "flavours", one as a plain library like `stdlib` which does not need to start any processes, and one where the application controller starts a service with several processes under a supervision tree. For the second case the controller checks the `<project>.app` file for the `mod` property which may look like:
 ```erlang
-{mod, {'glite_app', []}}
+{mod, {'glite', []}}
 ```
 where the second tuple contains the start module and any start arguments.
 
@@ -16,37 +16,43 @@ where the second tuple contains the start module and any start arguments.
 When `gleam run` is executed it actually starts all registered applications (those having the `mod` property set). In order to enable it in our application we need to append to the `gleam.toml` file [<sup>2</sup>](#ref):
 ```toml
 [erlang]
-application_start_module = "glite_app"
+application_start_module = "glite"
 ```
-This will add the mod property to the `gleam.app` file.
+**This will add the mod property to the `glite.app` file.**
 
 ## Callback functions
-In the start module the application controller expects two callback functions to be implemented. Since Gleam compiles to Erlang source there is no problem to implement those in the Gleam project module, `glite` in this case if you do not prefer a pure erlang callback module:
+In the start module the application controller expects two callback functions, `start/2` and `stop/1`, to be implemented. Since Gleam compiles to Erlang source there is no problem to implement those in the Gleam project module, `glite` in this case, if you do not prefer a pure erlang callback module:
 
 ```rust
-pub type ErlangResult {
-  Ok
-}
-
 // --------------------- Erlang/OTP Application part --------------------
 /// The Erlang/OTP application start callback.
 /// Responsible to start the "top" supervisor process and return its Pid
 /// to the application controller.
-pub fn start(_app: atom.Atom, _type) -> Result(process.Pid, dynamic.Dynamic) {
+pub fn start(_app: Atom, _type) -> Result(process.Pid, actor.StartError) {
   io.println("Application start - starts the top supervisor")
-  let assert gleam.Ok(actor.Started(pid, _data)) = start_supervisor()
-  gleam.Ok(pid)
+  case start_supervisor() {
+    Ok(actor.Started(pid, _data)) -> {
+      let sup_name = process.new_name("one_for_all_sup")
+      let _ = process.register(pid, sup_name)
+      Ok(pid)
+    }
+    Error(reason) -> Error(reason)
+  }
 }
 
 /// The Erlang/OTP application stop callback.
 /// This is called after all processes in the supervisor tree have
 /// been shutdown by the application controller. Responsible for any
 /// final clean up actions.
-pub fn stop(_state: a) -> ErlangResult {
-  Ok
+pub fn stop(_state: a) -> Atom {
+  atom.create("ok")
 }
+
+// -------- Supervisor ----------------------------------
+/// Erlang application top supervisor
+fn start_supervisor() -> Result(actor.Started(sup.Supervisor), actor.StartError) {
+...
 ```
-In our example project we implement the callbacks with some extra optional ones in the erlang module `glite_app` which in turn calls the `glite.start_link` function.
 
 <!--
  [![Package Version](https://img.shields.io/hexpm/v/gliteapp)](https://hex.pm/packages/gliteapp)
@@ -69,6 +75,8 @@ Further documentation can be found at <https://hexdocs.pm/gliteapp>.
 
 ## Joining the ecosystem
 The benefits of doing all this is not obvious, but joining as a complete Erlang application gives the possibility to use diagnostic tools like `observer`to introspect your processes and trace messages.
+> [!NOTE]
+> The both the `main` function and the `start` function will be called when doing `gleam run` but only `start` if you start from an erlang shell. (`gleam shell` and then `application:ensure_all_started(glite)` for instance).
 ```rust
 pub fn main() {
   io.println("Hello from gliteapp!")

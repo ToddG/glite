@@ -1,5 +1,5 @@
 name = "glite"
-version = "1.0.0"
+version = "1.1.0"
 
 # Fill out these fields if you intend to generate HTML documentation or publish
 # your project to the Hex package manager.
@@ -22,4 +22,4 @@ glydamic = { git = "https://github.com/karlsson/glydamic", ref="main"}
 gleeunit = ">= 1.0.0 and < 2.0.0"
 
 [erlang]
-application_start_module = "glite_app"
+application_start_module = "glite"
